@@ -1,0 +1,30 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "typedSql"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas  = ["coresystem", "externalsystem", "integrationsystem", "servicesystem",  "public"]
+}
+
+model User {
+  id            Int         @id @default(autoincrement()) @map("UserId")
+  username      String      @map("Username")
+  email         String?     @unique @map("Email")
+  firstname     String?     @map("FirstName")
+  lastname      String?     @map("LastName")
+  password      String      @map("Password")
+  isstaff       Boolean     @default(false) @map("IsStaff")
+  isadmin       Boolean     @default(false) @map("IsAdmin")
+  isactive      Boolean     @default(true) @map("IsActive") 
+  lastlogin     DateTime?   @map("LastLogin") 
+  createdAt     DateTime    @default(now()) @map("CreationDate")
+  updatedAt     DateTime    @updatedAt @map("UpdateDate")
+  deletionDate  DateTime?   @map("DeletionDate")
+
+  @@map("User")
+  @@schema("coresystem")
+}
