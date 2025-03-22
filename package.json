@@ -1,0 +1,27 @@
+{
+  "name": "df.apirest",
+  "version": "1.0.0",
+  "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon --watch \"src/\" --exec \"ts-node src/index.ts\" -e ts",
+    "start": "node build/index.js",
+    "build": "tsc --project tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://DireitoFavoravel@dev.azure.com/DireitoFavoravel/Dev_DireitoFavoravel/_git/DF.ApiREST"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsc": "^2.0.4",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "tsc-init": "^2.1.0"
+  }
+}
