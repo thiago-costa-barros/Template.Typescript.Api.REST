@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": ".", // Define o diretório raiz para caminhos absolutos
+    "paths": {
+      "@lib/*": ["app/_lib/*"]
+    },
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
     /* Projects */

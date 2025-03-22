@@ -4,7 +4,7 @@
   "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon --watch \"src/\" --exec \"ts-node src/index.ts\" -e ts",
+    "start:dev": "nodemon --watch \"src/\" --exec \"ts-node -r tsconfig-paths/register src/server.ts\" -e ts",
     "start": "node build/index.js",
     "build": "tsc --project tsconfig.json"
   },
@@ -25,12 +25,15 @@
     "globals": "^16.0.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.5.3",
+    "prisma": "^6.5.0",
     "ts-node": "^10.9.2",
     "tsc": "^2.0.4",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.27.0"
   },
   "dependencies": {
+    "@prisma/client": "^6.5.0",
     "express": "^4.21.2",
     "tsc-init": "^2.1.0"
   }
