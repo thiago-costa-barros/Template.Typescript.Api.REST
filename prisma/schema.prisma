@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id            Int         @id @default(autoincrement()) @map("UserId")
-  username      String      @map("Username")
+  username      String      @unique @map("Username")
   email         String?     @unique @map("Email")
   firstname     String?     @map("FirstName")
   lastname      String?     @map("LastName")
