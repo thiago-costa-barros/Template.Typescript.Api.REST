@@ -3,9 +3,10 @@ import { Request } from "express";
 
 // Interface para o Controller
 export interface IGetUsersController {
-  handle(
+  getUsers(
     req: Request
   ): Promise<{ statusCode: number; body: User[] | { error: string } }>;
+  getUserById(userId: number): Promise<{ statusCode: number; body: User | { error: string } }>;
 }
 
 export interface ICreateUserController {
@@ -14,4 +15,3 @@ export interface ICreateUserController {
     body: User | { error: string; missingFields?: string[] };
   }>;
 }
-

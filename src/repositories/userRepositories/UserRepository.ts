@@ -23,4 +23,11 @@ export class UserRepository implements ICreateUserRepository, IGetUsersRepositor
     const users = await prisma.user.findMany();
     return users;
   }
+
+  // Lista dados do usuário autenticado
+  async getUserById(userId: number): Promise<User | null> {
+    return await prisma.user.findUnique({
+      where: { id: userId },
+    });
+  }
 }

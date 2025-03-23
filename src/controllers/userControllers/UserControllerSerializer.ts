@@ -1,8 +1,8 @@
 import { User } from '@prisma/client';
-import { CreateUserResponse } from './UserControllerTRA';
+import { CreateUserResponseData } from './UserControllerTRA';
 
 export class UserSerializer {
-  static serialize(user: User): CreateUserResponse {
+  static serialize(user: User): CreateUserResponseData {
     return {
       id: user.id,
       username: user.username,

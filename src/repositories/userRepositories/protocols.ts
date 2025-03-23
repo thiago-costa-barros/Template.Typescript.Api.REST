@@ -7,4 +7,5 @@ export interface ICreateUserRepository {
 
 export interface IGetUsersRepository {
   getUsers(): Promise<User[]>;
+  getUserById(userId: number): Promise<User | null>;
 }
