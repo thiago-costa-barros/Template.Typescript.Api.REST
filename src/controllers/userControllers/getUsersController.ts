@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { User } from '@prisma/client';
 import { Request } from 'express';
-import { IGetUserController } from './protocols';
-import { IGetUserRepository } from './protocols';
+import { IGetUsersController } from './protocols';
+import { IGetUsersRepository } from './protocols';
 
-export class GetUserController implements IGetUserController {
-    constructor(private readonly getUserRepository: IGetUserRepository) {}
+export class GetUsersController implements IGetUsersController {
+    constructor(private readonly getUserRepository: IGetUsersRepository) {}
 
     async handle(req: Request): Promise<{ statusCode: number; body: User[] | { error: string } }> {
         try {
@@ -14,7 +14,6 @@ export class GetUserController implements IGetUserController {
                 statusCode: 200,
                 body: users,
             };
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             return {
                 statusCode: 500,
