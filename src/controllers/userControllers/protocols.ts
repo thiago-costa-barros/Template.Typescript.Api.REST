@@ -1,11 +1,17 @@
-import {User} from '@prisma/client'
+import { User } from "@prisma/client";
+import { Request } from "express";
 
 // Interface para o Controller
-export interface IGetUserController {
-    handle(): Promise<{ statusCode: number; body: User[] | { error: string } }>;
+export interface IGetUsersController {
+  getUsers(
+    req: Request
+  ): Promise<{ statusCode: number; body: User[] | { error: string } }>;
+  getUserById(userId: number): Promise<{ statusCode: number; body: User | { error: string } }>;
 }
 
-// Interface para o Repositório
-export interface IGetUserRepository {
-    getUsers(): Promise<User[]>;
+export interface ICreateUserController {
+  handle(req: Request): Promise<{
+    statusCode: number;
+    body: User | { error: string; missingFields?: string[] };
+  }>;
 }
