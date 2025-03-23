@@ -1,14 +1,13 @@
-import { prisma } from '@lib/prisma';
-import { UserRepository } from './repositories/UserRepository';
-import { GetUsersController } from './controllers/userControllers/getUsersController';
+import { UserRepository } from './repositories/userRepositories/UserRepository';
+import { UserController } from './controllers/userControllers/UserController';
 
-// Instancia o repositório
-const userRepository = new UserRepository(prisma);
+// Instancia o repositório (se necessário para outros usos)
+const userRepository = new UserRepository();
 
-// Instancia o controller com o repositório injetado
-const getUserController = new GetUsersController(userRepository);
+// Instancia o controller
+const userController = new UserController();
 
 export const dependencies = {
-    userRepository,
-    getUserController,
+  userRepository,
+  userController,
 };
