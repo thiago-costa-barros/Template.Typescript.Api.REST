@@ -1,0 +1,23 @@
+model ExternalWebhookReceiver {
+  id             Int       @id @default(autoincrement()) @map("ExternalWebhookReceiverId")
+  creationDate   DateTime  @default(now()) @map("CreationDate")
+  updateDate     DateTime? @updatedAt @map("UpdateDate")
+  deletionDate   DateTime? @map("DeletionDate")
+  requestId      String    @unique @map("RequestId")
+  eventDate      DateTime  @map("EventDate")
+  eventType      Int       @map("EventType")
+  status         Int       @map("Status")
+  version        String?   @map("Version")
+  payload        Json?     @map("Payload")
+  sourceType     Int       @map("Type")
+  creationUserId Int       @map("CreationUserId")
+  updateUserId   Int?      @map("UpdateUserId")
+
+  @@map("ExternalWebhookReceiver")
+  @@schema("externalsystem")
+  @@index([requestId])
+  @@index([eventDate])
+  @@index([creationDate])
+  @@index([updateDate])
+  @@index([deletionDate])
+}
