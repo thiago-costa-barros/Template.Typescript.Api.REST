@@ -19,7 +19,10 @@ export class ExternalWebhookReceiverRepository {
     data: Prisma.InputJsonValue;
     status: number;
   }): Promise<ExternalWebhookReceiver> {
-    
+    if (!prisma) {
+      throw new Error("Prisma is not initialized");
+    }
+
     return prisma.externalWebhookReceiver.create({
       data: {
         requestId: data.id,
@@ -31,6 +34,18 @@ export class ExternalWebhookReceiverRepository {
         status: data.status,
         creationUserId: 0,
       },
+    });
+  }
+
+  async getExternalWebhookReceiverByRequestId(
+    requestId: string
+  ): Promise<ExternalWebhookReceiver | null> {
+    if (!prisma) {
+      throw new Error("Prisma is not initialized");
+    }
+
+    return prisma.externalWebhookReceiver.findUnique({
+      where: { requestId: requestId, deletionDate: null },
     });
   }
 }
