@@ -1,9 +1,11 @@
-import { User } from '@prisma/client';
-import { CreateUserDTO } from '../../controllers/userControllers/UserControllerDTO';
-import { prisma } from '@lib/prisma';
-import { ICreateUserRepository, IGetUsersRepository } from './protocols';
+import { User } from "@prisma/client";
+import { CreateUserDTO } from "../../controllers/userControllers/UserControllerDTO";
+import { prisma } from "@lib/prisma";
+import { ICreateUserRepository, IGetUsersRepository } from "./protocols";
 
-export class UserRepository implements ICreateUserRepository, IGetUsersRepository {
+export class UserRepository
+  implements ICreateUserRepository, IGetUsersRepository
+{
   // Cria um usuário
   async createUser(userData: CreateUserDTO): Promise<User> {
     const user = await prisma.user.create({
@@ -28,6 +30,12 @@ export class UserRepository implements ICreateUserRepository, IGetUsersRepositor
   async getUserById(userId: number): Promise<User | null> {
     return await prisma.user.findUnique({
       where: { id: userId },
+    });
+  }
+
+  async getUserByUsername(username: string): Promise<User | null> {
+    return await prisma.user.findUnique({
+      where: { username: username, deletionDate: null },
     });
   }
 }

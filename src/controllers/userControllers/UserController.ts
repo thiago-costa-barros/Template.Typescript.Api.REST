@@ -1,26 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request } from "express";
 import { CreateUserDTO } from "./UserControllerDTO";
-import { CreateUserResponse } from "./UserControllerTRA";
-import { CreateUserResponseData } from "./UserControllerTRA";
+import { CreateUserResponse, CreateUserResponseData } from "./UserControllerTRA";
 import { UserSerializer } from "./UserControllerSerializer";
+import { UserService } from "src/services/userServices/UserService";
 import { UserRepository } from "src/repositories/userRepositories/UserRepository";
-import { ICreateUserRepository } from "src/repositories/userRepositories/protocols";
-import { IGetUsersRepository } from "src/repositories/userRepositories/protocols";
-import bcrypt from "bcryptjs";
 import { generateToken, generateRefreshToken } from "../../utils/AuthUtils";
 
 export class UserController {
-  private createUserRepository: ICreateUserRepository;
-  private getUsersRepository: IGetUsersRepository;
+  private userService: UserService;
 
   constructor() {
-    // Inicializa os repositórios com a instância global do Prisma
-    this.createUserRepository = new UserRepository();
-    this.getUsersRepository = new UserRepository();
+    // Inicializa o serviço com o repositório
+    const userRepository = new UserRepository();
+    this.userService = new UserService(userRepository);
   }
 
-  // Método para criar um usuário
   async createUser(req: Request): Promise<{
     statusCode: number;
     body: CreateUserResponse | { error: string; missingFields?: string[] };
@@ -50,14 +45,17 @@ export class UserController {
         password,
       };
 
-      // Criptografa a senha
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const existsUser = await this.userService.serviceGetUserByUsername(createUserDTO.username)
 
-      // Cria o usuário no banco de dados
-      const user = await this.createUserRepository.createUser({
-        ...createUserDTO,
-        password: hashedPassword,
-      });
+      if(existsUser){
+        return {
+          statusCode: 422,
+          body: { error: "Usuário já cadastrado" },
+        };
+      }
+
+      // Chama o serviço para criar o usuário (a criptografia está no serviço)
+      const user = await this.userService.serviceCreateUser(createUserDTO);
 
       // Serializa o usuário para a resposta
       const serializedUser = UserSerializer.serialize(user);
@@ -80,16 +78,15 @@ export class UserController {
     }
   }
 
-  // Método para listar usuários
   async getUsers(req: Request): Promise<{
     statusCode: number;
     body: CreateUserResponseData[] | { error: string };
   }> {
     try {
-      const users = await this.getUsersRepository.getUsers();
+      // Nota: Você precisará adicionar este método ao UserService
+      const users = await this.userService.serviceGetUsers();
 
-      // Serializa cada usuário para a resposta
-      const serializedUsers = users.map((user) =>
+      const serializedUsers = users.map((user) => 
         UserSerializer.serialize(user)
       );
 
@@ -105,13 +102,13 @@ export class UserController {
     }
   }
 
-  // Método para listar dados do usuário autenticado
   async getUserById(
     req: Request
   ): Promise<{ statusCode: number; body: CreateUserResponseData | { error: string } }> {
     try {
       const userId = parseInt(req.params.id, 10);
-      const user = await this.getUsersRepository.getUserById(userId);
+      // Nota: Você precisará adicionar este método ao UserService
+      const user = await this.userService.serviceGetUserById(userId);
   
       if (!user) {
         return {
@@ -133,4 +130,3 @@ export class UserController {
     }
   }
 }
-
