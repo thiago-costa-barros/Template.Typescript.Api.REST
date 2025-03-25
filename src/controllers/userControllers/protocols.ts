@@ -10,7 +10,7 @@ export interface IGetUsersController {
 }
 
 export interface ICreateUserController {
-  handle(req: Request): Promise<{
+  createUser(req: Request): Promise<{
     statusCode: number;
     body: User | { error: string; missingFields?: string[] };
   }>;
