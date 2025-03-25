@@ -30,6 +30,11 @@ export class ExternalWebhookReceiverSourceType {
   });
 
   private constructor() {}
+
+  static fromName(name: string | null): PublicEnum {
+    const found = Object.values(this).find(e => e.name === name);
+    return found || this.Default;
+  }
 }
 
 export class ExternalWebhookReceiverStatus {
@@ -123,4 +128,9 @@ export class ExternalWebhookReceiverEventType {
   });
 
   private constructor() {}
+
+  static fromName(name: string | null): PublicEnum {
+    const found = Object.values(this).find(e => e.name === name);
+    return found || this.ERROR;
+  }
 }
