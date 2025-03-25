@@ -13,8 +13,8 @@ if (!JWT_SECRET || !REFRESH_TOKEN_SECRET) {
   throw new Error("Chaves JWT não configuradas no ambiente.");
 }
 
-const JWT_EXPIRES_IN = "4h"; // Tempo de expiração do token
-const REFRESH_TOKEN_EXPIRES_IN = "7d"; // Tempo de expiração do refresh token
+const JWT_EXPIRES_IN = "720h"; // Tempo de expiração do token
+const REFRESH_TOKEN_EXPIRES_IN = "366d"; // Tempo de expiração do refresh token
 
 export function generateToken(userId: number): string {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });

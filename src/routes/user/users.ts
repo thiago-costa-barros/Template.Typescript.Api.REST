@@ -2,7 +2,6 @@ import express from "express";
 import { dependencies } from "../../dependencies";
 import { authenticateToken } from "../../middlewares/auth";
 import { IsAdminUser } from "../../middlewares/isAdminUser";
-import { getUserIdFromRequest } from "src/utils/AuthUtils";
 import { IsStaffUserOrSelf } from "src/middlewares/isStaffUser";
 
 const router = express.Router();
