@@ -45,13 +45,14 @@ export function verifyToken(token: string): { userId: number } | null {
 export function getUserIdFromRequest(req: Request): number | null {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
-
+  //console.log("Token recebido:", token);
   if (!token) {
     return null; // Token não fornecido
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    //console.log("UserId: ", decoded.userId)
     return decoded.userId; // Retorna o userId do token
   } catch (error) {
     return null; // Token inválido ou expirado

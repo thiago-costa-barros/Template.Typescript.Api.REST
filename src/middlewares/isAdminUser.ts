@@ -24,7 +24,7 @@ export async function IsAdminUser(
   });
 
   if (!user || !user.isAdmin) {
-    res.status(403).json({ error: "Acesso negado" });
+    res.status(403).json({ error: "Acesso negado: recurso permitido somente a usuários Administradores" });
     return; // Retorna void
   }
 
