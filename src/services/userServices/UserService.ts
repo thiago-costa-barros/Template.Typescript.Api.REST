@@ -1,7 +1,10 @@
-import { User } from '@prisma/client';
-import { UserRepository } from '../../repositories/userRepositories/UserRepository';
-import { CreateUserDTO } from 'src/controllers/userControllers/UserControllerDTO';
-import bcrypt from 'bcryptjs';
+import { User } from "@prisma/client";
+import { UserRepository } from "../../repositories/userRepositories/UserRepository";
+import { CreateUserDTO } from "src/controllers/userControllers/UserControllerDTO";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
@@ -29,5 +32,16 @@ export class UserService {
 
   async serviceGetUserByUsername(username: string): Promise<User | null> {
     return this.userRepository.getUserByUsername(username);
+  }
+
+  async serviceGetOrCreateHandlerUser(handlerName: string): Promise<User> {
+    const defaults = {
+      firstname: "Process Function",
+      lastname: handlerName,
+      password: process.env.HANDLER_PASSWORD as string,
+      isStaff: true,
+    };
+
+    return this.userRepository.getOrCreateHandlerUser(handlerName, defaults);
   }
 }

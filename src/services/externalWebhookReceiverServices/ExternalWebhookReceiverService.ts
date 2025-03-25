@@ -5,7 +5,7 @@ import { ExternalWebhookReceiverEventType, ExternalWebhookReceiverSourceType, Ex
 export class ExternalWebhookReceiverService {
   constructor(private readonly repository: ExternalWebhookReceiverRepository) {}
 
-  async serviceCreateExternalWebhookReceiverHotmart(dto: ExternalWebhookReceiverHotmartDTO, source: string | null) {
+  async serviceCreateExternalWebhookReceiverHotmart(dto: ExternalWebhookReceiverHotmartDTO, source: string | null, userId: number) {
     // Converte o evento para o valor numérico
     const eventType = ExternalWebhookReceiverEventType.fromName(dto.event);
     const sourceType = ExternalWebhookReceiverSourceType.fromName(source);
@@ -17,6 +17,7 @@ export class ExternalWebhookReceiverService {
       event: eventType.value,
       source: sourceType.value,
       status: status,
+      userId: userId,
     };
 
     return this.repository.createExternalWebhookReceiverHotmart(repositoryData);

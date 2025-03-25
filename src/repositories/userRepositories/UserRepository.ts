@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { CreateUserDTO } from "../../controllers/userControllers/UserControllerDTO";
 import { prisma } from "@lib/prisma";
 import { ICreateUserRepository, IGetUsersRepository } from "./protocols";
+import bcrypt from "bcryptjs";
 
 export class UserRepository
   implements ICreateUserRepository, IGetUsersRepository
@@ -36,6 +37,30 @@ export class UserRepository
   async getUserByUsername(username: string): Promise<User | null> {
     return await prisma.user.findUnique({
       where: { username: username, deletionDate: null },
+    });
+  }
+
+  async getOrCreateHandlerUser(
+    handlerName: string,
+    defaults: {
+      firstname: string;
+      lastname: string;
+      password: string;
+      isStaff: boolean;
+    }
+  ): Promise<User> {
+    const hashedPassword = await bcrypt.hash(defaults.password, 10);
+
+    return prisma.user.upsert({
+      where: { username: handlerName },
+      update: {},
+      create: {
+        username: handlerName,
+        firstName: defaults.firstname,
+        lastName: defaults.lastname,
+        password: hashedPassword,
+        isStaff: defaults.isStaff,
+      },
     });
   }
 }

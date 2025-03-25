@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".", // Define o diretório raiz para caminhos absolutos
     "paths": {
       "@lib/*": ["app/_lib/*"]

@@ -18,6 +18,7 @@ export class ExternalWebhookReceiverRepository {
     source: number;
     data: Prisma.InputJsonValue;
     status: number;
+    userId: number;
   }): Promise<ExternalWebhookReceiver> {
     if (!prisma) {
       throw new Error("Prisma is not initialized");
@@ -32,7 +33,7 @@ export class ExternalWebhookReceiverRepository {
         sourceType: data.source,
         payload: data.data,
         status: data.status,
-        creationUserId: 0,
+        creationUserId: data.userId,
       },
     });
   }
