@@ -1,7 +1,7 @@
 export type AuthTokens = {
   token: string;
   refreshToken: string;
-  expiresIn: number;
+  expiresAt: Date;
 };
 
 export type AuthUserResponse = {

@@ -14,7 +14,7 @@ export const AuthSerializer = {
       tokens: {
         token: tokens.token,
         refreshToken: tokens.refreshToken,
-        expiresIn: tokens.expiresIn,
+        expiresAt: tokens.expiresAt,
       },
     };
   },

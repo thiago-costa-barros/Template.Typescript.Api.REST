@@ -1,19 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request } from "express";
 import { CreateUserDTO } from "./UserControllerDTO";
-import { CreateUserResponse, CreateUserResponseData } from "./UserControllerTRA";
+import { CreateUserResponse, GetUserResponseData } from "./UserControllerTRA";
 import { UserSerializer } from "./UserControllerSerializer";
 import { UserService } from "src/services/UserService";
 import { UserRepository } from "src/repositories/UserRepository";
-import { generateToken, generateRefreshToken } from "../utils/AuthUtils";
+import { UserTokenService } from "src/services/AuthService";
+import { UserTokenRepository } from "src/repositories/AuthRepository";
+import { AuthTokens } from "./AuthControllerTRA";
 
 export class UserController {
   private userService: UserService;
+  private userTokenService: UserTokenService;
 
   constructor() {
     // Inicializa o serviço com o repositório
     const userRepository = new UserRepository();
     this.userService = new UserService(userRepository);
+    const userTokenRepository = new UserTokenRepository();
+    this.userTokenService = new UserTokenService(userTokenRepository, userRepository);
   }
 
   async createUser(req: Request): Promise<{
@@ -59,18 +64,21 @@ export class UserController {
       // Chama o serviço para criar o usuário (a criptografia está no serviço)
       const user = await this.userService.serviceCreateUser(createUserDTO);
 
-      // Serializa o usuário para a resposta
-      const serializedUser = UserSerializer.serialize(user);
+      const token = await this.userTokenService.serviceGenerateAccessToken({userId: user.id});
+      const refreshToken = await this.userTokenService.serviceGenerateRefreshToken({userId: user.id});
 
-      const token = generateToken(user.id);
-      const refreshToken = generateRefreshToken(user.id);
+      const serializedTokens: AuthTokens = {
+        token: token.jwtToken,
+        refreshToken: refreshToken.jwtToken,
+        expiresAt: token.expiresAt
+      }
+
+      // Serializa o usuário para a resposta
+      const serializedResponse = UserSerializer.serializerCreateUser(user,serializedTokens);
 
       return {
         statusCode: 201,
-        body: {
-          user: serializedUser,
-          tokens: { token, refreshToken },
-        },
+        body: serializedResponse,
       };
     } catch (error) {
       return {
@@ -82,14 +90,14 @@ export class UserController {
 
   async getUsers(req: Request): Promise<{
     statusCode: number;
-    body: CreateUserResponseData[] | { error: string };
+    body: GetUserResponseData[] | { error: string };
   }> {
     try {
       // Nota: Você precisará adicionar este método ao UserService
       const users = await this.userService.serviceGetUsers();
 
       const serializedUsers = users.map((user) =>
-        UserSerializer.serialize(user)
+        UserSerializer.serializerGetUser(user)
       );
 
       return {
@@ -106,7 +114,7 @@ export class UserController {
 
   async getUserById(req: Request): Promise<{
     statusCode: number;
-    body: CreateUserResponseData | { error: string };
+    body: GetUserResponseData | { error: string };
   }> {
     try {
       const userId = parseInt(req.params.id, 10);
@@ -120,7 +128,7 @@ export class UserController {
         };
       }
 
-      const serializedUser = UserSerializer.serialize(user);
+      const serializedUser = UserSerializer.serializerGetUser(user);
       return {
         statusCode: 200,
         body: serializedUser,

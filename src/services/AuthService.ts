@@ -43,14 +43,15 @@ export class UserTokenService {
 
   async serviceGenerateRefreshToken(
     dto: GenerateTokenDTO
-  ): Promise<{ token: string; expiresAt: Date }> {
+  ): Promise<{ token: string;jwtToken: string; expiresAt: Date }> {
     const expiresAt = addDays(new Date(), this.jwtConfig.REFRESH_EXPIRES_DAYS);
-    const token = jwt.sign(
+    const jwtToken = jwt.sign(
       { userId: dto.userId, type: UserTokenType.RefreshToken },
       this.jwtConfig.REFRESH_SECRET,
       { expiresIn: `${this.jwtConfig.REFRESH_EXPIRES_DAYS}d` }
     );
-    return { token, expiresAt };
+    const token = await bcrypt.hash(jwtToken, 10);
+    return { token, jwtToken, expiresAt };
   }
 
   async serviceVerifyToken(

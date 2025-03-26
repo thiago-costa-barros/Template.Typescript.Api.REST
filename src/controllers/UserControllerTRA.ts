@@ -1,4 +1,6 @@
-export type CreateUserResponseData = {
+import { AuthTokens } from "./AuthControllerTRA";
+
+export type GetUserResponseData = {
     id: number;
     username: string;
     email: string | null;
@@ -7,9 +9,6 @@ export type CreateUserResponseData = {
   };
 
   export type CreateUserResponse = {
-    user: CreateUserResponseData;
-    tokens: {
-      token: string;
-      refreshToken: string;
-    };
+    user: GetUserResponseData;
+    tokens: AuthTokens
   };
