@@ -1,7 +1,7 @@
 import express from "express";
 import { dependencies } from "../dependencies";
 import { IsAdminUser, IsStaffUserOrSelf } from "../middlewares/AuthorizedMiddlewares";
-import { authenticateUserToken } from "src/middlewares/AuthMiddlewares";
+import { authenticateUserToken } from "src/middlewares/AuthTokenMiddlewares";
 
 const router = express.Router();
 
@@ -12,10 +12,15 @@ router.get("/", authenticateUserToken, IsAdminUser, async (req, res) => {
 });
 
 // Rota para obter informações de um usuário específico
-router.get("/:id", authenticateUserToken, IsStaffUserOrSelf, async (req, res) => {
-  const response = await dependencies.userController.getUserById(req);
-  res.status(response.statusCode).json(response.body);
-});
+router.get(
+  "/:id",
+  authenticateUserToken,
+  IsStaffUserOrSelf,
+  async (req, res) => {
+    const response = await dependencies.userController.getUserById(req);
+    res.status(response.statusCode).json(response.body);
+  }
+);
 
 // Rota para criar um usuário
 router.post("/", async (req, res) => {
