@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response, NextFunction } from 'express';
-import { getUserIdFromRequest, verifyToken } from '../utils/AuthUtils';
 import { UserTokenService } from '../services/AuthService';
 import { UserTokenRepository } from '../repositories/AuthRepository';
 import { UserRepository } from '../repositories/UserRepository';
