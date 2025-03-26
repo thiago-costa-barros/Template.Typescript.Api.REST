@@ -21,6 +21,7 @@
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.11",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",

@@ -60,4 +60,32 @@ export class UserRepository {
       },
     });
   }
+
+  async verifyIsAdminUser(userId: number){
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+        deletionDate: null,
+        isActive: true,
+        isAdmin: true,
+      },
+    });
+
+    return user;
+  
+  }
+
+  async verifyIsStaffUser(userId: number){
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+        deletionDate: null,
+        isActive: true,
+        isStaff: true,
+      },
+    });
+
+    return user;
+  
+  }
 }

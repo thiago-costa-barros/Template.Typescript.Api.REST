@@ -1,18 +1,25 @@
-// import express from 'express';
-// import { dependencies } from '../../dependencies';
+import express from 'express';
+import { dependencies } from 'src/dependencies';
+import { authenticateUserToken } from 'src/middlewares/AuthMiddlewares';
 
-// const router = express.Router();
+const router = express.Router();
 
-// // Rota de registro
-// router.post('/register', async (req, res) => {
-//     const response = await dependencies.registerUserController.handle(req);
-//     res.status(response.statusCode).json(response.body);
-// });
+// Rota de login
+router.post('/login', async (req, res) => {
+    const response = await dependencies.userTokenController.login(req)
+    res.status(response.statusCode).json(response.body);
+});
 
-// // Rota de login
-// router.post('/login', async (req, res) => {
-//     const response = await dependencies.loginUserController.handle(req);
-//     res.status(response.statusCode).json(response.body);
-// });
+// Rota de refresh token
+router.post('/refresh', async (req, res) => {
+    const response = await dependencies.userTokenController.refreshToken(req);
+    res.status(response.statusCode).json(response.body);
+});
 
-// export default router;
+// Rota de logout
+router.get('/logout',authenticateUserToken, async (req, res) => {
+    const response = await dependencies.userTokenController.logout(req);
+    res.status(response.statusCode).json(response.body);
+});
+
+export default router;

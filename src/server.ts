@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import express from "express";
-import routes from "./routes/routes";
+import routes from "./routes/Routes";
 import "tsconfig-paths/register";
 
 config();

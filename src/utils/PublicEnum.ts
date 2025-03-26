@@ -32,7 +32,7 @@ export class ExternalWebhookReceiverSourceType {
   private constructor() {}
 
   static fromName(name: string | null): PublicEnum {
-    const found = Object.values(this).find(e => e.name === name);
+    const found = Object.values(this).find((e) => e.name === name);
     return found || this.Default;
   }
 }
@@ -130,7 +130,24 @@ export class ExternalWebhookReceiverEventType {
   private constructor() {}
 
   static fromName(name: string | null): PublicEnum {
-    const found = Object.values(this).find(e => e.name === name);
+    const found = Object.values(this).find((e) => e.name === name);
     return found || this.ERROR;
   }
+}
+
+export class UserTokenStatus {
+  static readonly Active = 0;
+  static readonly Inactive = 1;
+  static readonly Blocked = 2;
+  static readonly Expired = 3;
+  static readonly Error = 4;
+
+  private constructor() {}
+}
+
+export class UserTokenType {
+  static readonly AccessToken = 0;
+  static readonly RefreshToken = 1;
+
+  private constructor() {}
 }

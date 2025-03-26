@@ -13,11 +13,11 @@ model ExternalWebhookReceiver {
   creationUserId Int       @map("CreationUserId")
   updateUserId   Int?      @map("UpdateUserId")
 
-  @@map("ExternalWebhookReceiver")
-  @@schema("externalsystem")
   @@index([requestId])
   @@index([eventDate])
   @@index([creationDate])
   @@index([updateDate])
   @@index([deletionDate])
+  @@map("ExternalWebhookReceiver")
+  @@schema("externalsystem")
 }

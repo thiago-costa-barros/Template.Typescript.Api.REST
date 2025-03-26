@@ -1,0 +1,22 @@
+model UserToken {
+  id             Int       @id @default(autoincrement()) @map("TokenId")
+  userId         Int       @map("UserId")
+  token          String    @unique @map("Token")
+  type           Int       @map("Type")
+  expiresAt      DateTime  @map("ExpiresAt")
+  status         Int       @map("Status")
+  revokedAt      DateTime? @map("RevokedAt")
+  creationDate   DateTime  @default(now()) @map("CreationDate")
+  updateDate     DateTime? @updatedAt @map("UpdateDate")
+  deletionDate   DateTime? @map("DeletionDate")
+  creationUserId Int       @map("CreationUserId")
+  updateUserId   Int?      @map("UpdateUserId")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, deletionDate])
+  @@index([type, deletionDate])
+  @@index([expiresAt, deletionDate])
+  @@map("UserToken")
+  @@schema("integrationsystem")
+}
