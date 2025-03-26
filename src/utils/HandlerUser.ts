@@ -1,6 +1,6 @@
 // src/utils/handlerUser.ts
-import { UserService } from '../services/userServices/UserService';
-import { UserRepository } from '../repositories/userRepositories/UserRepository';
+import { UserService } from "../services/UserService";
+import { UserRepository } from "../repositories/UserRepository";
 
 export async function getHandlerUserId(handlerName: string): Promise<number> {
   const userService = new UserService(new UserRepository());

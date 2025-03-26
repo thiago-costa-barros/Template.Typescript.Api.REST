@@ -1,11 +1,19 @@
-import { ExternalWebhookReceiverHotmartDTO } from "src/controllers/externalWebhookReceiverControllers/ExternalWebhookReceiverControllerDTO";
-import { ExternalWebhookReceiverRepository } from "src/repositories/externalWebhookReceiverRepositories/ExternalWebhookReceiverRepository";
-import { ExternalWebhookReceiverEventType, ExternalWebhookReceiverSourceType, ExternalWebhookReceiverStatus } from "src/utils/PublicEnum";
+import { ExternalWebhookReceiverHotmartDTO } from "src/controllers/ExternalWebhookReceiverControllerDTO";
+import { ExternalWebhookReceiverRepository } from "src/repositories/ExternalWebhookReceiverRepository";
+import {
+  ExternalWebhookReceiverEventType,
+  ExternalWebhookReceiverSourceType,
+  ExternalWebhookReceiverStatus,
+} from "src/utils/PublicEnum";
 
 export class ExternalWebhookReceiverService {
   constructor(private readonly repository: ExternalWebhookReceiverRepository) {}
 
-  async serviceCreateExternalWebhookReceiverHotmart(dto: ExternalWebhookReceiverHotmartDTO, source: string | null, userId: number) {
+  async serviceCreateExternalWebhookReceiverHotmart(
+    dto: ExternalWebhookReceiverHotmartDTO,
+    source: string | null,
+    userId: number
+  ) {
     // Converte o evento para o valor numérico
     const eventType = ExternalWebhookReceiverEventType.fromName(dto.event);
     const sourceType = ExternalWebhookReceiverSourceType.fromName(source);

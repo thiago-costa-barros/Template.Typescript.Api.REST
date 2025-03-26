@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
-import { UserRepository } from "../../repositories/userRepositories/UserRepository";
-import { CreateUserDTO } from "src/controllers/userControllers/UserControllerDTO";
+import { UserRepository } from "../repositories/UserRepository";
+import { CreateUserDTO } from "src/controllers/UserControllerDTO";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 

@@ -1,7 +1,7 @@
 import { ExternalWebhookReceiver, Prisma } from "@prisma/client";
 import { prisma } from "@lib/prisma";
-import { UserService } from "src/services/userServices/UserService";
-import { UserRepository } from "../userRepositories/UserRepository";
+import { UserService } from "src/services/UserService";
+import { UserRepository } from "./UserRepository";
 
 export class ExternalWebhookReceiverRepository {
   private userService: UserService;

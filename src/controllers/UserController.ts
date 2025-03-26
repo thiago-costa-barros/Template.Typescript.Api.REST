@@ -3,9 +3,9 @@ import { Request } from "express";
 import { CreateUserDTO } from "./UserControllerDTO";
 import { CreateUserResponse, CreateUserResponseData } from "./UserControllerTRA";
 import { UserSerializer } from "./UserControllerSerializer";
-import { UserService } from "src/services/userServices/UserService";
-import { UserRepository } from "src/repositories/userRepositories/UserRepository";
-import { generateToken, generateRefreshToken } from "../../utils/AuthUtils";
+import { UserService } from "src/services/UserService";
+import { UserRepository } from "src/repositories/UserRepository";
+import { generateToken, generateRefreshToken } from "../utils/AuthUtils";
 
 export class UserController {
   private userService: UserService;
@@ -45,9 +45,11 @@ export class UserController {
         password,
       };
 
-      const existsUser = await this.userService.serviceGetUserByUsername(createUserDTO.username)
+      const existsUser = await this.userService.serviceGetUserByUsername(
+        createUserDTO.username
+      );
 
-      if(existsUser){
+      if (existsUser) {
         return {
           statusCode: 422,
           body: { error: "Usuário já cadastrado" },
@@ -86,7 +88,7 @@ export class UserController {
       // Nota: Você precisará adicionar este método ao UserService
       const users = await this.userService.serviceGetUsers();
 
-      const serializedUsers = users.map((user) => 
+      const serializedUsers = users.map((user) =>
         UserSerializer.serialize(user)
       );
 
@@ -102,21 +104,22 @@ export class UserController {
     }
   }
 
-  async getUserById(
-    req: Request
-  ): Promise<{ statusCode: number; body: CreateUserResponseData | { error: string } }> {
+  async getUserById(req: Request): Promise<{
+    statusCode: number;
+    body: CreateUserResponseData | { error: string };
+  }> {
     try {
       const userId = parseInt(req.params.id, 10);
       // Nota: Você precisará adicionar este método ao UserService
       const user = await this.userService.serviceGetUserById(userId);
-  
+
       if (!user) {
         return {
           statusCode: 404,
-          body: { error: 'Usuário não encontrado' },
+          body: { error: "Usuário não encontrado" },
         };
       }
-  
+
       const serializedUser = UserSerializer.serialize(user);
       return {
         statusCode: 200,
@@ -125,7 +128,7 @@ export class UserController {
     } catch (error) {
       return {
         statusCode: 500,
-        body: { error: 'Internal Server Error' },
+        body: { error: "Internal Server Error" },
       };
     }
   }

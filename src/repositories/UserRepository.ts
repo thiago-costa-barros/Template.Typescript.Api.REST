@@ -1,12 +1,9 @@
 import { User } from "@prisma/client";
-import { CreateUserDTO } from "../../controllers/userControllers/UserControllerDTO";
+import { CreateUserDTO } from "../controllers/UserControllerDTO";
 import { prisma } from "@lib/prisma";
-import { ICreateUserRepository, IGetUsersRepository } from "./protocols";
 import bcrypt from "bcryptjs";
 
-export class UserRepository
-  implements ICreateUserRepository, IGetUsersRepository
-{
+export class UserRepository {
   // Cria um usuário
   async createUser(userData: CreateUserDTO): Promise<User> {
     const user = await prisma.user.create({

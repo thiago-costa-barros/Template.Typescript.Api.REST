@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request } from "express";
 import { ExternalWebhookReceiverHotmartDTO } from "./ExternalWebhookReceiverControllerDTO";
-import { ExternalWebhookReceiverService } from "../../services/externalWebhookReceiverServices/ExternalWebhookReceiverService";
-import { ExternalWebhookReceiverRepository } from "../../repositories/externalWebhookReceiverRepositories/ExternalWebhookReceiverRepository";
+import { ExternalWebhookReceiverService } from "../services/ExternalWebhookReceiverService";
+import { ExternalWebhookReceiverRepository } from "../repositories/ExternalWebhookReceiverRepository";
 import { VerifyHotmartToken } from "src/utils/VerifyExternalTokens";
 import { AutoHandlerUserId } from "src/decorators/AutoHandlerUserId";
 import { getHandlerUserId } from "src/utils/HandlerUser";
@@ -25,12 +25,12 @@ export class ExternalWebhookReceiverController {
           body: { error: "Token inválido" },
         };
       }
-      
+
       const webhookData: ExternalWebhookReceiverHotmartDTO = req.body;
       const source: string | null = req.headers["user-agent"] || null;
       const handlerName = this._methodName as string;
 
-      const userId = await getHandlerUserId(handlerName)
+      const userId = await getHandlerUserId(handlerName);
 
       // Validações básicas
       if (!webhookData.event || !webhookData.id) {
@@ -40,7 +40,8 @@ export class ExternalWebhookReceiverController {
         };
       }
 
-      const existsExternalWebhookReceiver = await this.service.serviceGetExternalWebhookReceiverByRequestId(
+      const existsExternalWebhookReceiver =
+        await this.service.serviceGetExternalWebhookReceiverByRequestId(
           webhookData.id
         );
       if (existsExternalWebhookReceiver) {
@@ -60,7 +61,7 @@ export class ExternalWebhookReceiverController {
 
       return {
         statusCode: 200,
-        body: { success: true, id: result.requestId},
+        body: { success: true, id: result.requestId },
       };
     } catch (error) {
       return {
