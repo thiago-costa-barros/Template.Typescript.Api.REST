@@ -79,6 +79,13 @@ export class UserTokenService {
     const passwordMatch = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatch) throw new Error("Credenciais inválidas");
 
+    const existsValidToken = await this.userTokenRepository.getValidTokenByUserId({
+      userId: user.id,
+      type: UserTokenType.AccessToken,
+      status: UserTokenStatus.Active,
+    });
+    if (existsValidToken) throw new Error("Usuário já está logado");
+
     const accessToken = await this.serviceGenerateAccessToken({
       userId: user.id,
     });
@@ -88,7 +95,7 @@ export class UserTokenService {
 
     await this.userTokenRepository.createUserToken({
         userId: user.id,
-        token: accessToken.jwtToken,
+        token: accessToken.token,
         type: UserTokenType.AccessToken,
         status: UserTokenStatus.Active,
         expiresAt: accessToken.expiresAt,
@@ -106,7 +113,7 @@ export class UserTokenService {
 
     return {
       accessToken: accessToken.jwtToken,
-      refreshToken: refreshToken.token,
+      refreshToken: refreshToken.jwtToken,
       expiresIn: this.jwtConfig.ACCESS_EXPIRES_MINUTES * 60, // em segundos
       userId: user.id,
     };

@@ -38,6 +38,20 @@ export class UserTokenRepository {
     });
   }
 
+  async getValidTokenByUserId(tokenData: {
+    userId: number;
+    type: number;
+    status: number;
+  }): Promise<UserToken | null> {
+    return prisma.userToken.findFirst({
+      where: {
+        ...tokenData,
+        deletionDate: null,
+        expiresAt: { gt: new Date() },
+      },
+    });
+  }
+
   async revokeToken(
     tokendData: {tokenId: number,
     status: number,
