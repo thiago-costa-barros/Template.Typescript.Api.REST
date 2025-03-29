@@ -6,6 +6,12 @@ import { ExternalWebhookReceiverRepository } from "../repositories/ExternalWebho
 import { VerifyHotmartToken } from "src/utils/VerifyExternalTokens";
 import { AutoHandlerUserId } from "src/decorators/AutoHandlerUserId";
 import { getHandlerUserId } from "src/utils/HandlerUser";
+import {
+  CustomError,
+  InternalServerError,
+  UnauthorizedError,
+  UnprocessableEntityError,
+} from "src/errors/CustomError";
 
 export class ExternalWebhookReceiverController {
   private service: ExternalWebhookReceiverService;
@@ -19,12 +25,8 @@ export class ExternalWebhookReceiverController {
   @AutoHandlerUserId
   async CreateExternalWebhookReceiverHotmart(req: Request) {
     try {
-      if (!VerifyHotmartToken(req)) {
-        return {
-          statusCode: 401,
-          body: { error: "Token inválido" },
-        };
-      }
+      if (!VerifyHotmartToken(req))
+        throw new UnauthorizedError("Hotmart Token Inválido");
 
       const webhookData: ExternalWebhookReceiverHotmartDTO = req.body;
       const source: string | null = req.headers["user-agent"] || null;
@@ -33,23 +35,15 @@ export class ExternalWebhookReceiverController {
       const userId = await getHandlerUserId(handlerName);
 
       // Validações básicas
-      if (!webhookData.event || !webhookData.id) {
-        return {
-          statusCode: 422,
-          body: { error: "Dados do webhook inválidos" },
-        };
-      }
+      if (!webhookData.event || !webhookData.id)
+        throw new UnprocessableEntityError("Dados do webhook inválidos");
 
       const existsExternalWebhookReceiver =
         await this.service.serviceGetExternalWebhookReceiverByRequestId(
           webhookData.id
         );
-      if (existsExternalWebhookReceiver) {
-        return {
-          statusCode: 422,
-          body: { error: "Webhook já processado" },
-        };
-      }
+      if (existsExternalWebhookReceiver)
+        throw new UnprocessableEntityError("Webhook já processado");
 
       // Processa via service
       const result =
@@ -60,14 +54,20 @@ export class ExternalWebhookReceiverController {
         );
 
       return {
+        sucess: true,
         statusCode: 200,
-        body: { success: true, id: result.requestId },
+        message: "Webhook processado com sucesso",
+        data: webhookData,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: "Erro ao processar webhook" },
-      };
+      // Não encapsule erros customizados em InternalServerError
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new InternalServerError(
+        "Ocorreu um erro inesperado no servidor",
+        error
+      );
     }
   }
 }

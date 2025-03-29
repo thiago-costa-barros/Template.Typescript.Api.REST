@@ -2,6 +2,7 @@ import { ExternalWebhookReceiver, Prisma } from "@prisma/client";
 import { prisma } from "@lib/prisma";
 import { UserService } from "src/services/UserService";
 import { UserRepository } from "./UserRepository";
+import { ServiceUnavailableError } from "src/errors/CustomError";
 
 export class ExternalWebhookReceiverRepository {
   private userService: UserService;
@@ -21,7 +22,7 @@ export class ExternalWebhookReceiverRepository {
     userId: number;
   }): Promise<ExternalWebhookReceiver> {
     if (!prisma) {
-      throw new Error("Prisma is not initialized");
+      throw new ServiceUnavailableError("Prisma is not initialized");
     }
 
     return prisma.externalWebhookReceiver.create({
@@ -42,7 +43,7 @@ export class ExternalWebhookReceiverRepository {
     requestId: string
   ): Promise<ExternalWebhookReceiver | null> {
     if (!prisma) {
-      throw new Error("Prisma is not initialized");
+      throw new ServiceUnavailableError("Prisma is not initialized");
     }
 
     return prisma.externalWebhookReceiver.findUnique({
