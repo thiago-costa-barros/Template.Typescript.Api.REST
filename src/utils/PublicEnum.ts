@@ -151,3 +151,17 @@ export class UserTokenType {
 
   private constructor() {}
 }
+
+export class ErrorType {
+  static readonly ValidationError = new PublicEnum({ name: "ValidationError", value: 400 });
+  static readonly Unauthorized = new PublicEnum({ name: "Unauthorized", value: 401 });
+  static readonly Forbidden = new PublicEnum({ name: "Forbidden", value: 403 });
+  static readonly NotFound = new PublicEnum({ name: "NotFound", value: 404 });
+  static readonly MethodNotAllowed = new PublicEnum({ name: "MethodNotAllowed", value: 405 });
+  static readonly Conflict = new PublicEnum({ name: "Conflict", value: 409 });
+  static readonly UnprocessableEntity = new PublicEnum({ name: "UnprocessableEntity", value: 422 });
+  static readonly InternalServerError = new PublicEnum({ name: "InternalServerError", value: 500 });
+  static readonly ServiceUnavailable = new PublicEnum({ name: "ServiceUnavailable", value: 503 });
+  
+  private constructor() {}
+}
