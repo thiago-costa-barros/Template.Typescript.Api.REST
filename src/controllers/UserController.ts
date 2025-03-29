@@ -8,6 +8,13 @@ import { UserRepository } from "src/repositories/UserRepository";
 import { UserTokenService } from "src/services/AuthService";
 import { UserTokenRepository } from "src/repositories/AuthRepository";
 import { AuthTokens } from "./AuthControllerTRA";
+import {
+  CustomError,
+  InternalServerError,
+  NotFoundError,
+  UnprocessableEntityError,
+  ValidationError,
+} from "src/errors/CustomError";
 
 export class UserController {
   private userService: UserService;
@@ -18,13 +25,13 @@ export class UserController {
     const userRepository = new UserRepository();
     this.userService = new UserService(userRepository);
     const userTokenRepository = new UserTokenRepository();
-    this.userTokenService = new UserTokenService(userTokenRepository, userRepository);
+    this.userTokenService = new UserTokenService(
+      userTokenRepository,
+      userRepository
+    );
   }
 
-  async createUser(req: Request): Promise<{
-    statusCode: number;
-    body: CreateUserResponse | { error: string; missingFields?: string[] };
-  }> {
+  async createUser(req: Request) {
     try {
       const { username, email, firstname, lastname, password } = req.body;
 
@@ -35,10 +42,10 @@ export class UserController {
       if (!password) missingFields.push("password");
 
       if (missingFields.length > 0) {
-        return {
-          statusCode: 400,
-          body: { error: "Fields are required", missingFields },
-        };
+        throw new ValidationError("Campos obrigatórios faltando", {
+          error: "Campos obrigatórios faltantes",
+          missingFields,
+        });
       }
 
       // Cria o DTO
@@ -55,43 +62,48 @@ export class UserController {
       );
 
       if (existsUser) {
-        return {
-          statusCode: 422,
-          body: { error: "Usuário já cadastrado" },
-        };
+        throw new UnprocessableEntityError("Usuário já existe");
       }
 
       // Chama o serviço para criar o usuário (a criptografia está no serviço)
       const user = await this.userService.serviceCreateUser(createUserDTO);
 
-      const token = await this.userTokenService.serviceGenerateAccessToken({userId: user.id});
-      const refreshToken = await this.userTokenService.serviceGenerateRefreshToken({userId: user.id});
+      const token = await this.userTokenService.serviceGenerateAccessToken({
+        userId: user.id,
+      });
+      const refreshToken =
+        await this.userTokenService.serviceGenerateRefreshToken({
+          userId: user.id,
+        });
 
       const serializedTokens: AuthTokens = {
         token: token.jwtToken,
         refreshToken: refreshToken.jwtToken,
-        expiresAt: token.expiresAt
-      }
+        expiresAt: token.expiresAt,
+      };
 
       // Serializa o usuário para a resposta
-      const serializedResponse = UserSerializer.serializerCreateUser(user,serializedTokens);
+      const serializedResponse = UserSerializer.serializerCreateUser(
+        user,
+        serializedTokens
+      );
 
       return {
+        sucess: true,
+        message: "Usuário Criado com sucesso",
         statusCode: 201,
         body: serializedResponse,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: "Internal Server Error" },
-      };
+      // Não encapsule erros customizados em InternalServerError
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw new InternalServerError("Ocorreu um erro inesperado no servidor", error);
     }
   }
 
-  async getUsers(req: Request): Promise<{
-    statusCode: number;
-    body: GetUserResponseData[] | { error: string };
-  }> {
+  async getUsers(req: Request) {
     try {
       // Nota: Você precisará adicionar este método ao UserService
       const users = await this.userService.serviceGetUsers();
@@ -101,43 +113,39 @@ export class UserController {
       );
 
       return {
+        sucess: true,
         statusCode: 200,
         body: serializedUsers,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: "Internal Server Error" },
-      };
+      throw new InternalServerError(
+        "Ocorreu um erro inesperado no servidor",
+        error
+      );
     }
   }
 
-  async getUserById(req: Request): Promise<{
-    statusCode: number;
-    body: GetUserResponseData | { error: string };
-  }> {
+  async getUserById(req: Request) {
     try {
       const userId = parseInt(req.params.id, 10);
       // Nota: Você precisará adicionar este método ao UserService
       const user = await this.userService.serviceGetUserById(userId);
 
       if (!user) {
-        return {
-          statusCode: 404,
-          body: { error: "Usuário não encontrado" },
-        };
+        throw new NotFoundError("Usuário não encontrado");
       }
 
       const serializedUser = UserSerializer.serializerGetUser(user);
       return {
+        sucess: true,
         statusCode: 200,
         body: serializedUser,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: "Internal Server Error" },
-      };
+      throw new InternalServerError(
+        "Ocorreu um erro inesperado no servidor",
+        error
+      );
     }
   }
 }

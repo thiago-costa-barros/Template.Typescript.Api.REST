@@ -12,7 +12,7 @@ import {
   RefreshTokenDTO,
   VerifyTokenDTO,
 } from "src/controllers/AuthControllerDTO";
-import { ValidationError } from "src/errors/CustomError";
+import { NotFoundError, UnauthorizedError, ValidationError } from "src/errors/CustomError";
 
 export class UserTokenService {
   constructor(
@@ -76,10 +76,10 @@ export class UserTokenService {
   async serviceLogin(dto: LoginDTO) {
     const user = await this.userRepository.getUserByUsername(dto.username);
 
-    if (!user) throw new Error("Credenciais inválidas");
+    if (!user) throw new ValidationError("Username inválida");
 
     const passwordMatch = await bcrypt.compare(dto.password, user.password);
-    if (!passwordMatch) throw new Error("Credenciais inválidas");
+    if (!passwordMatch) throw new ValidationError("Senha inválida");
 
     const existsValidToken =
       await this.userTokenRepository.getValidTokenByUserId({
@@ -142,7 +142,7 @@ export class UserTokenService {
       isRefresh: true,
     });
 
-    if (!decoded) throw new Error("RefreshToken inválido");
+    if (!decoded) throw new ValidationError("RefreshToken inválido");
 
     const tokenEntity = await this.userTokenRepository.findValidToken({
       userId: decoded.userId,
@@ -152,7 +152,7 @@ export class UserTokenService {
     });
 
     if (!tokenEntity)
-      throw new Error("RefreshToken não encontrado ou revogado");
+      throw new NotFoundError("RefreshToken não encontrado ou revogado");
 
     await this.userTokenRepository.revokeToken({
       tokenId: tokenEntity.id,
@@ -186,9 +186,9 @@ export class UserTokenService {
 
   async serviceLogout(req: Request) {
     const userId = await this.serviceGetUserIdFromRequest(req);
-    if (!userId) {
-      return null; // Token não fornecido
-    }
+
+    if (!userId) throw new UnauthorizedError("Token inválida");
+
     await this.userTokenRepository.revokeAllActiveAcessTokens({
       userId: userId,
       statusActive: UserTokenStatus.Active,
