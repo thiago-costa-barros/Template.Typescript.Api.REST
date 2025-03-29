@@ -18,20 +18,20 @@ export const authenticateUserToken = async (req: Request, res: Response, next: N
     if (!token) {
       throw new ValidationError("Token não fornecido");
     }
-    console.log('Token recebido: ', token);
+    //console.log('Token recebido: ', token);
     const decoded = await userTokenService.serviceVerifyToken({ token });
     
     if (!decoded) {
       throw new ForbiddenError("Token inválido ou expirado");
     }
-    console.log('usuário encontrado: ',decoded);
+    //console.log('Usuário encontrado: ',decoded);
     const tokenEntity = await userTokenRepository.findValidToken({
           userId: decoded.userId,
           type: UserTokenType.AccessToken,
           status: UserTokenStatus.Active,
           revokedAt: null,
         });
-    console.log('TokenEntity: ',tokenEntity);
+    //console.log('TokenEntity: ',tokenEntity);
     if (!tokenEntity || tokenEntity.expiresAt < new Date()) {
       throw new ForbiddenError("Token inválido ou expirado");
     }
