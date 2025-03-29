@@ -14,13 +14,11 @@ import {
 } from "src/errors/CustomError";
 
 export class ExternalWebhookReceiverController {
-  private service: ExternalWebhookReceiverService;
   private _methodName?: string;
 
-  constructor() {
-    const repository = new ExternalWebhookReceiverRepository();
-    this.service = new ExternalWebhookReceiverService(repository);
-  }
+  constructor(
+    private readonly externalWebhookReceiverService: ExternalWebhookReceiverService,
+  ) {}
 
   @AutoHandlerUserId
   async CreateExternalWebhookReceiverHotmart(req: Request) {
@@ -39,7 +37,7 @@ export class ExternalWebhookReceiverController {
         throw new UnprocessableEntityError("Dados do webhook inválidos");
 
       const existsExternalWebhookReceiver =
-        await this.service.serviceGetExternalWebhookReceiverByRequestId(
+        await this.externalWebhookReceiverService.serviceGetExternalWebhookReceiverByRequestId(
           webhookData.id
         );
       if (existsExternalWebhookReceiver)
@@ -47,7 +45,7 @@ export class ExternalWebhookReceiverController {
 
       // Processa via service
       const result =
-        await this.service.serviceCreateExternalWebhookReceiverHotmart(
+        await this.externalWebhookReceiverService.serviceCreateExternalWebhookReceiverHotmart(
           webhookData,
           source,
           userId

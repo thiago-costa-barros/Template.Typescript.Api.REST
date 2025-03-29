@@ -6,7 +6,7 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   try {
     const response =
-      await dependencies.externalWebhookReceiverController.CreateExternalWebhookReceiverHotmart(
+      await dependencies.controllers.externalWebhookReceiverController.CreateExternalWebhookReceiverHotmart(
         req
       );
     res.status(response.statusCode).json(response);

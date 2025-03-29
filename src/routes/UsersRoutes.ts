@@ -11,7 +11,7 @@ const router = express.Router();
 // Rota para listar usuários (apenas administradores)
 router.get("/", authenticateUserToken, IsAdminUser, async (req, res, next) => {
   try {
-    const response = await dependencies.userController.getUsers(req);
+    const response = await dependencies.controllers.userController.getUsers(req);
     res.status(response.statusCode).json(response);
   } catch (error) {
     next(error); // Passa o erro para o middleware centralizado
@@ -25,7 +25,7 @@ router.get(
   IsStaffUserOrSelf,
   async (req, res, next) => {
     try {
-      const response = await dependencies.userController.getUserById(req);
+      const response = await dependencies.controllers.userController.getUserById(req);
       res.status(response.statusCode).json(response);
     } catch (error) {
       next(error); // Passa o erro para o middleware centralizado
@@ -36,7 +36,7 @@ router.get(
 // Rota para criar um usuário
 router.post("/", async (req, res, next) => {
   try {
-    const response = await dependencies.userController.createUser(req);
+    const response = await dependencies.controllers.userController.createUser(req);
     res.status(response.statusCode).json(response);
   } catch (error) {
     next(error); // Passa o erro para o middleware centralizado

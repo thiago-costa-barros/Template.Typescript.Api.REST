@@ -17,19 +17,10 @@ import {
 } from "src/errors/CustomError";
 
 export class UserController {
-  private userService: UserService;
-  private userTokenService: UserTokenService;
-
-  constructor() {
-    // Inicializa o serviço com o repositório
-    const userRepository = new UserRepository();
-    this.userService = new UserService(userRepository);
-    const userTokenRepository = new UserTokenRepository();
-    this.userTokenService = new UserTokenService(
-      userTokenRepository,
-      userRepository
-    );
-  }
+  constructor(
+    private readonly userService: UserService,
+    private readonly userTokenService: UserTokenService
+  ) {}
 
   async createUser(req: Request) {
     try {
@@ -92,7 +83,7 @@ export class UserController {
         sucess: true,
         message: "Usuário Criado com sucesso",
         statusCode: 201,
-        body: serializedResponse,
+        data: serializedResponse,
       };
     } catch (error) {
       // Não encapsule erros customizados em InternalServerError
@@ -115,7 +106,7 @@ export class UserController {
       return {
         sucess: true,
         statusCode: 200,
-        body: serializedUsers,
+        data: serializedUsers,
       };
     } catch (error) {
       throw new InternalServerError(
@@ -139,7 +130,7 @@ export class UserController {
       return {
         sucess: true,
         statusCode: 200,
-        body: serializedUser,
+        data: serializedUser,
       };
     } catch (error) {
       throw new InternalServerError(

@@ -1,8 +1,6 @@
 // src/controllers/TokenController.ts
 import { Request } from "express";
-import { UserRepository } from "../repositories/UserRepository";
 import { UserTokenService } from "src/services/AuthService";
-import { UserTokenRepository } from "src/repositories/AuthRepository";
 import { LoginDTO, RefreshTokenDTO } from "./AuthControllerDTO";
 import {
   CustomError,
@@ -11,18 +9,9 @@ import {
 } from "src/errors/CustomError";
 
 export class UserTokenController {
-  private userTokenService: UserTokenService;
-  private userRepository: UserRepository;
-
-  constructor() {
-    const userTokenRepository = new UserTokenRepository();
-    const userRepository = new UserRepository();
-    this.userTokenService = new UserTokenService(
-      userTokenRepository,
-      userRepository
-    );
-    this.userRepository = new UserRepository();
-  }
+  constructor(
+    private readonly userTokenService: UserTokenService
+  ) {}
 
   async login(req: Request) {
     const { username, password } = req.body;
