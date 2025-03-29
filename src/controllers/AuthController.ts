@@ -39,6 +39,7 @@ export class UserTokenController {
         sucess: true,
         message: "Login efetuado com sucesso",
         statusCode: 200,
+        resultDate: Date.now(),
         body: tokens,
       };
     } catch (error) {
@@ -70,6 +71,7 @@ export class UserTokenController {
         sucess: true,
         message: "Refresh efetuado com sucesso",
         statusCode: 200,
+        resultDate: Date.now(),
         body: tokens,
       };
     } catch (error) {
@@ -91,6 +93,7 @@ export class UserTokenController {
         sucess: true,
         message: "Logout efetuado com sucesso",
         statusCode: 200,
+        resultDate: Date.now(),
       };
     } catch (error) {
       // Não encapsule erros customizados em InternalServerError

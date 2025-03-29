@@ -55,6 +55,7 @@ export class ExternalWebhookReceiverController {
         sucess: true,
         statusCode: 200,
         message: "Webhook processado com sucesso",
+        resultDate: Date.now(),
         data: webhookData,
       };
     } catch (error) {

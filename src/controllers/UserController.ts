@@ -83,6 +83,7 @@ export class UserController {
         sucess: true,
         message: "Usuário Criado com sucesso",
         statusCode: 201,
+        resultDate: Date.now(),
         data: serializedResponse,
       };
     } catch (error) {
@@ -106,6 +107,7 @@ export class UserController {
       return {
         sucess: true,
         statusCode: 200,
+        resultDate: Date.now(),
         data: serializedUsers,
       };
     } catch (error) {
@@ -130,6 +132,7 @@ export class UserController {
       return {
         sucess: true,
         statusCode: 200,
+        resultDate: Date.now(),
         data: serializedUser,
       };
     } catch (error) {
