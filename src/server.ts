@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import express, { Request, Response, NextFunction } from "express";
-import routes from "./routes/Routes";
+import routes from "./routes/routes";
 import "tsconfig-paths/register";
 import { errorHandler } from "./middlewares/ErrorHandlerMiddleware";
 
