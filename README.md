@@ -1,20 +1,98 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+Template de API REST com TypeScript, Express, Node.js e Prisma
+==============================================================
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+🚀 Introdução
+-------------
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Este projeto é um template de API REST desenvolvido com TypeScript, Express, Node.js e Prisma, focado em autenticação e gerenciamento de usuários. Foi criado para servir como base sólida para projetos futuros, incorporando boas práticas de desenvolvimento e arquitetura limpa.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+✨ Principais Funcionalidades
+----------------------------
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+-   **Autenticação JWT** com tokens de acesso e refresh
+
+-   **CRUD de Usuários** com diferentes níveis de permissão
+
+-   **Prisma ORM** com múltiplos schemas PostgreSQL
+
+-   **Validação de DTOs** para entrada de dados
+
+-   **Middleware de Erros** centralizado
+
+-   **Sistema de Permissões** (Admin, Staff, Usuário comum)
+
+-   **Migrations** organizadas para evolução do banco de dados
+
+🛠️ Tecnologias Utilizadas
+--------------------------
+
+-   **Backend**: Node.js + Express
+
+-   **Linguagem**: TypeScript
+
+-   **ORM**: Prisma
+
+-   **Banco de Dados**: PostgreSQL
+
+-   **Autenticação**: JWT (JSON Web Tokens)
+
+-   **Testes**: (A implementar)
+
+-   **Documentação**: (A implementar)
+
+📦 Estrutura do Projeto
+-----------------------
+
+```
+src/
+├── controllers/    # Lógica dos endpoints
+├── services/       # Regras de negócio
+├── repositories/   # Acesso ao banco de dados
+├── middlewares/    # Middlewares de autenticação e autorização
+├── routes/         # Definição das rotas
+├── errors/         # Tratamento de erros customizados
+├── utils/          # Utilitários e enums
+prisma/             # Migrations e schema do Prisma
+```
+
+🔧 Como Usar
+------------
+
+1.  **Pré-requisitos**:
+
+    -   Node.js (v18+)
+
+    -   PostgreSQL
+
+    -   Yarn ou npm
+
+2.  **Instalação**:
+
+    ```
+
+    git clone [seu-repositorio]
+    cd template-typescript-api
+    yarn install
+    ```
+
+3.  **Configuração**:
+
+    -   Crie um arquivo `.env` baseado no `.env.example`
+
+    -   Configure as variáveis de banco de dados e JWT
+
+4.  **Execução**:
+    Desenvolvimento
+```
+    yarn dev:start
+```
+
+📚 Documentação da API
+----------------------
+
+(A implementar - Swagger/Postman)
+
+🤝 Contribuição
+---------------
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
