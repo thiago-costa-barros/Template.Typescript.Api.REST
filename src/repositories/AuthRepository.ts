@@ -24,7 +24,6 @@ export class UserTokenRepository {
 
   async findValidToken(tokenData: {
     userId: number;
-    token: string;
     type: number;
     status: number;
     revokedAt: null;

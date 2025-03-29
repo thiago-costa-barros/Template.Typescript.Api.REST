@@ -4,6 +4,7 @@ import { UserTokenService } from '../services/AuthService';
 import { UserTokenRepository } from '../repositories/AuthRepository';
 import { UserRepository } from '../repositories/UserRepository';
 import { UserTokenStatus, UserTokenType } from 'src/utils/PublicEnum';
+import { ForbiddenError, InternalServerError, ValidationError } from 'src/errors/CustomError';
 
 const userTokenRepository = new UserTokenRepository();
 const userRepository = new UserRepository();
@@ -15,39 +16,33 @@ export const authenticateUserToken = async (req: Request, res: Response, next: N
     const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
     
     if (!token) {
-      res.status(401).json({ error: 'Token não fornecido' });
-      return
+      throw new ValidationError("Token não fornecido");
     }
-
+    console.log('Token recebido: ', token);
     const decoded = await userTokenService.serviceVerifyToken({ token });
     
     if (!decoded) {
-      res.status(403).json({ error: 'Token inválido ou expirado' });
-      return; // Retorna void
+      throw new ForbiddenError("Token inválido ou expirado");
     }
-
+    console.log('usuário encontrado: ',decoded);
     const tokenEntity = await userTokenRepository.findValidToken({
           userId: decoded.userId,
-          token: token,
           type: UserTokenType.AccessToken,
           status: UserTokenStatus.Active,
           revokedAt: null,
         });
-
+    console.log('TokenEntity: ',tokenEntity);
     if (!tokenEntity || tokenEntity.expiresAt < new Date()) {
-      res.status(403).json({ error: 'Token inválido ou expirado' });
-      return; // Retorna void
+      throw new ForbiddenError("Token inválido ou expirado");
     }
 
     if (tokenEntity.expiresAt < new Date()) {
-      res.status(403).json({ error: 'Token expirado' });
-      return; // Retorna void
+      throw new ForbiddenError("Token inválido ou expirado");
     }
     
     next();
   } catch (error) {
-    res.status(500).json({ error: 'Erro na autenticação' });
-    return 
+    next(error) 
   }
 };
 

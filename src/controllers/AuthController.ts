@@ -4,6 +4,7 @@ import { UserRepository } from "../repositories/UserRepository";
 import { UserTokenService } from "src/services/AuthService";
 import { UserTokenRepository } from "src/repositories/AuthRepository";
 import { LoginDTO, RefreshTokenDTO } from "./AuthControllerDTO";
+import { InternalServerError, ValidationError } from "src/errors/CustomError";
 
 export class UserTokenController {
   private userTokenService: UserTokenService;
@@ -17,6 +18,16 @@ export class UserTokenController {
   }
 
   async login(req: Request) {
+    const { username, password } = req.body;
+    
+    // Validação mais robusta
+    if (!username || typeof username !== 'string') {
+      throw new ValidationError("O campo 'username' é obrigatório e deve ser uma string");
+    }
+
+    if (!password || typeof password !== 'string') {
+      throw new ValidationError("O campo 'password' é obrigatório e deve ser uma string");
+    }
     const dto: LoginDTO = {
       username: req.body.username,
       password: req.body.password
@@ -25,14 +36,13 @@ export class UserTokenController {
     try {
       const tokens = await this.userTokenService.serviceLogin(dto);
       return {
+        sucess: true,
+        message: "Login efetuado com sucesso",
         statusCode: 200,
         body: tokens
       };
     } catch (error) {
-      return {
-        statusCode: 401,
-        body: { error: error }
-      };
+      throw new InternalServerError('Ocorreu um erro inesperado no servidor', error);
     }
   }
 
@@ -66,14 +76,12 @@ export class UserTokenController {
     try {
       await this.userTokenService.serviceLogout(req);
       return {
-        statusCode: 200,
-        body: { message: "Logout efetuado com sucesso" }
+        sucess: true,
+        message: "Logout efetuado com sucesso",
+        statusCode: 200
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: error }
-      };
+      throw new InternalServerError('Ocorreu um erro inesperado no servidor', error);
     }
   }
 }
