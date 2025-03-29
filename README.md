@@ -69,9 +69,8 @@ prisma/             # Migrations e schema do Prisma
 2.  **Instalação**:
 
     ```
-
-    git clone [seu-repositorio]
-    cd template-typescript-api
+    git clone https://github.com/thiago-costa-barros/Template.Typescript.Api.REST.git
+    cd Template.Typescript.Api.REST
     yarn install
     ```
 
